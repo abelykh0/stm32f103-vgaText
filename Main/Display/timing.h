@@ -7,8 +7,7 @@ namespace Vga
 {
 
 /*
- * Describes the horizontal and vertical timing for a display mode, including
- * the outer bounds of active video.
+ * Describes the horizontal and vertical timing for a display mode.
  */
 struct Timing
 {
@@ -22,30 +21,22 @@ struct Timing
 
     /*
     * Horizontal timing, expressed in pixels.
-    *
-    * The horizontal sync pulse implicitly starts at pixel zero of the line.
-    *
-    * Some of this information is redundant; it's stored this way to avoid
-    * having to rederive it in the driver.
     */
-    uint16_t line_pixels;       // Total, including blanking.
-    uint16_t sync_pixels;       // Length of pulse.
-    uint16_t back_porch_pixels; // Between end of sync and start of video.
-    int16_t video_lead;         // Fudge factor: manual adjustment.
-    uint16_t video_pixels;      // Maximum pixels in active video.
-    Polarity hsync_polarity;    // Polarity of hsync pulse.
+    uint16_t horizPixels;
+    Polarity horizSyncPolarity;
+    uint16_t horizWholeLine;
+    uint16_t horizSyncPulse;
+    uint16_t horizStartDraw;
+    int16_t  horizLead; // manual adjustment as needed
 
     /*
     * Vertical timing, expressed in lines.
-    *
-    * Because vertical timing is done in software, it's a little more flexible
-    * than horizontal timing.
     */
-    uint16_t vsync_start_line; // Top edge of sync pulse.
-    uint16_t vsync_end_line;   // Bottom edge of sync pulse.
-    uint16_t video_start_line; // Top edge of active video.
-    uint16_t video_end_line;   // Bottom edge of active video.
-    Polarity vsync_polarity;   // Polarity of vsync pulse.
+    uint16_t verticalPixels;
+    Polarity verticalSyncPolarity;
+    uint16_t verticalWholeFrame;
+    uint16_t verticalSyncPulse;
+    uint16_t verticalStartLine;
 };
 
 /*
@@ -53,9 +44,6 @@ struct Timing
  */
 extern Timing const timing_640x480_60hz;
 extern Timing const timing_640x480_60_01hz;
-extern Timing const timing_640x480_85hz;
-extern Timing const timing_720x576_48hz;
-extern Timing const timing_800x600_56hz;
 
 } // namespace Vga
 

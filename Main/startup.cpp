@@ -36,7 +36,7 @@ extern "C" void setup()
 	for (int32_t y = 0; y < VSIZE_CHARS; y++)
 	{
 		char buf[30];
-		snprintf(buf, 30, "%02d", (uint16_t)y);
+		snprintf(buf, 30, "%02d", (uint16_t)y + 1);
 		SetCursorPosition(0, y);
 		Print(buf);
 	}
@@ -51,7 +51,7 @@ extern "C" void loop()
 	if (scanCode > 0)
 	{
 		char buf[30];
-		snprintf(buf, 30, "%lx", (uint32_t)scanCode);
+		snprintf(buf, 30, "%04lx", (uint32_t)scanCode);
 		if ((scanCode & 0xFF00) == 0xF000)
 		{
 			// key up
@@ -65,5 +65,5 @@ extern "C" void loop()
 		Print(buf);
 	}
 
-	HAL_Delay(100);
+	//HAL_Delay(10);
 }

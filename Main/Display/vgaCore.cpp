@@ -57,32 +57,32 @@ void Vga::InitVga(VideoSettings* videoSettings)
 
     GPIO_ODR = (uint8_t*)&GPIOA->ODR;
 
-    double factor = HAL_RCC_GetHCLKFreq() / 1000000.0 / timing->pixel_frequency_mhz;
-    int wholeLine = factor * timing->line_pixels;
-    int syncPulse = factor * timing->sync_pixels;
-    int startDraw = factor * (timing->sync_pixels + timing->back_porch_pixels) - timing->video_lead;
-
 	double realPixelsPerPixel = timing->pixel_frequency_mhz / 12;
 	uint16_t usedHorizontalPixels = HSIZE_CHARS * 8 * realPixelsPerPixel;
-	if (usedHorizontalPixels > timing->video_pixels * realPixelsPerPixel)
+	if (usedHorizontalPixels > timing->horizPixels * realPixelsPerPixel)
 	{
-		usedHorizontalPixels = timing->video_pixels * realPixelsPerPixel;
+		usedHorizontalPixels = timing->horizPixels * realPixelsPerPixel;
 	}
-	uint16_t horizontalOffset = (timing->video_pixels - usedHorizontalPixels) / 2;
+	uint16_t horizontalOffset = (timing->horizPixels - usedHorizontalPixels) / 2;
 
-	uint16_t totalVerticalPixels = timing->video_end_line - timing->video_start_line;
 	uint16_t usedVerticalPixels = VSIZE_CHARS * 8 * REPEAT_LINES;
-	if (usedVerticalPixels > totalVerticalPixels)
+	if (usedVerticalPixels > timing->verticalPixels)
 	{
-		usedVerticalPixels = totalVerticalPixels;
+		usedVerticalPixels = timing->verticalPixels;
 	}
 	verticalPixelCount = usedVerticalPixels / REPEAT_LINES;
-	uint16_t verticalOffset = (totalVerticalPixels - usedVerticalPixels) / 2;
+	uint16_t verticalOffset = (timing->verticalPixels - usedVerticalPixels) / 2;
 
-    InitHSync(timing->hsync_polarity, wholeLine, syncPulse, startDraw + horizontalOffset);
-    InitVSync(timing->vsync_polarity, timing->video_end_line - verticalOffset,
-              timing->vsync_end_line - timing->vsync_start_line,
-              timing->video_start_line + verticalOffset);
+    double factor = HAL_RCC_GetHCLKFreq() / 1000000.0 / timing->pixel_frequency_mhz;
+    int wholeLine = factor * timing->horizWholeLine;
+    int syncPulse = factor * timing->horizSyncPulse;
+    int startDraw = factor * timing->horizStartDraw - timing->horizLead;
+    InitHSync(timing->horizSyncPolarity, wholeLine, syncPulse, startDraw + horizontalOffset);
+
+    InitVSync(timing->verticalSyncPolarity,
+    	timing->verticalWholeFrame,
+        timing->verticalSyncPulse,
+        timing->verticalStartLine + verticalOffset);
 
     vline = 0;
     vdraw = 0;
