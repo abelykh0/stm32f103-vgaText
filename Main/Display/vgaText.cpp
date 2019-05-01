@@ -106,11 +106,22 @@ void Vga::Print(const char* str)
 
 void Vga::Print(char* str)
 {
+	bool cursorShown = cursor_visible;
+	if (cursorShown)
+	{
+		HideCursor();
+	}
+
     while (*str)
     {
     	PrintChar(cursor_x, cursor_y, *str++);
     	cursorNext();
     }
+
+	if (cursorShown)
+	{
+		ShowCursor();
+	}
 }
 
 uint8_t Vga::charFromAddress(uint32_t address)

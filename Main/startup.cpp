@@ -57,19 +57,49 @@ extern "C" void loop()
 	int32_t scanCode = Ps2_GetScancode();
 	if (scanCode > 0)
 	{
-		char buf[30];
-		snprintf(buf, 30, "%04lx", (uint32_t)scanCode);
-		if ((scanCode & 0xFF00) == 0xF000)
-		{
-			// key up
-			SetCursorPosition(10, 10);
-		}
-		else
+		//char buf[30];
+		//snprintf(buf, 30, "%04lx", (uint32_t)scanCode);
+		//Print(buf);
+
+		if ((scanCode & 0xFF00) != 0xF000)
 		{
 			// key down
-			SetCursorPosition(10, 11);
+			switch (scanCode)
+			{
+			case KEY_LEFTARROW:
+				if (Vga::cursor_x > 0)
+				{
+					Vga::SetCursorPosition(Vga::cursor_x - 1, Vga::cursor_y);
+				}
+				break;
+			case KEY_RIGHTARROW:
+				if (Vga::cursor_x < HSIZE_CHARS - 1)
+				{
+					Vga::SetCursorPosition(Vga::cursor_x + 1, Vga::cursor_y);
+				}
+				break;
+			case KEY_UPARROW:
+				if (Vga::cursor_y > 0)
+				{
+					Vga::SetCursorPosition(Vga::cursor_x, Vga::cursor_y - 1);
+				}
+				break;
+			case KEY_DOWNARROW:
+				if (Vga::cursor_y < VSIZE_CHARS - 1)
+				{
+					Vga::SetCursorPosition(Vga::cursor_x, Vga::cursor_y + 1);
+				}
+				break;
+			default:
+				char buf[2];
+				buf[0] = Ps2_ConvertScancode(scanCode);
+				if (buf[0] != '\0')
+				{
+					buf[1] = '\0';
+					Vga::Print(buf);
+				}
+			}
 		}
-		Print(buf);
 	}
 
 	//HAL_Delay(10);
