@@ -19,7 +19,7 @@ class VideoSettings
 	uint8_t TextRows;
 
 	// video memory
-	uint8_t* Pixels;
+	uint8_t* VideoMemory;
 };
 
 }

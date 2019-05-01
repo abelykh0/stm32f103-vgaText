@@ -11,7 +11,7 @@
 namespace Vga
 {
 const VideoSettings* settings;
-uint8_t* videoMemoryPixels;
+uint32_t* videoMemory;
 }
 
 static TIM_HandleTypeDef htim2;
@@ -22,9 +22,11 @@ static TIM_HandleTypeDef htim4;
 static volatile int vline = 0; /* The current line being drawn */
 static volatile int vflag = 0; /* When 1, can draw on the screen */
 static volatile int vdraw = 0; /* Used to increment vline every REPEAT_LINES drawn lines */
+static volatile int vblankline = 0; // used for workaround
 static uint8_t *GPIO_ODR;
 
 static uint16_t verticalPixelCount;
+static uint16_t verticalOffset;
 
 static void InitHSync(Vga::Timing::Polarity polarity, int wholeLine, int syncPulse, int startDraw);
 static void InitVSync(Vga::Timing::Polarity polarity, int wholeFrame, int syncPulse, int startDraw);
@@ -35,7 +37,8 @@ void Vga::InitVga(VideoSettings* videoSettings)
 {
 	settings = videoSettings;
 	const Timing* timing = videoSettings->Timing;
-	videoMemoryPixels = videoSettings->Pixels;
+	videoMemory = (uint32_t*)videoSettings->VideoMemory;
+	ClearScreen();
 
     GPIO_InitTypeDef gpioInit;
 
@@ -71,7 +74,7 @@ void Vga::InitVga(VideoSettings* videoSettings)
 		usedVerticalPixels = timing->verticalPixels;
 	}
 	verticalPixelCount = usedVerticalPixels / REPEAT_LINES;
-	uint16_t verticalOffset = (timing->verticalPixels - usedVerticalPixels) / 2;
+	verticalOffset = (timing->verticalPixels - usedVerticalPixels) / 2;
 
     double factor = HAL_RCC_GetHCLKFreq() / 1000000.0 / timing->pixel_frequency_mhz;
     int wholeLine = factor * timing->horizWholeLine;
@@ -82,7 +85,7 @@ void Vga::InitVga(VideoSettings* videoSettings)
     InitVSync(timing->verticalSyncPolarity,
     	timing->verticalWholeFrame,
         timing->verticalSyncPulse,
-        timing->verticalStartLine + verticalOffset);
+        timing->verticalStartLine);
 
     vline = 0;
     vdraw = 0;
@@ -90,7 +93,11 @@ void Vga::InitVga(VideoSettings* videoSettings)
 
 void Vga::ClearScreen()
 {
-    memset((void*)videoMemoryPixels, ' ', HSIZE_CHARS * VSIZE_CHARS);
+	uint32_t empty = addressFromChar(' ');
+	for (int i = 0; i <= HSIZE_CHARS * VSIZE_CHARS; i++)
+	{
+		videoMemory[i] = empty;
+	}
 }
 
 //*****************************************************************************
@@ -123,27 +130,32 @@ __irq void TIM3_IRQHandler()
     {
         __HAL_TIM_CLEAR_IT(&htim3, TIM_FLAG_CC2);
 
-        if (vflag)
-        {
-            __disable_irq();
+		// Workaround for first line not showing properly
+		if (vblankline > 0)
+		{
+			*GPIO_ODR = BACK_COLOR;
+			*GPIO_ODR = 0;
 
-            vgaDraw((uint8_t*)Vga::font + (vline % 8),
-            	&Vga::videoMemoryPixels[(vline / 8) * HSIZE_CHARS],
+			vblankline--;
+		}
+		else if (vflag)
+		{
+			vgaDraw(&Vga::videoMemory[(vline / 8) * HSIZE_CHARS],
+				vline % 8,
 				(uint32_t*)drawLookup, GPIO_ODR);
 
-            vdraw++;
-            if (vdraw == 2)
-            {
-                vdraw = 0;
-                vline++;
-                if (vline == verticalPixelCount)
-                {
-                    vdraw = vline = vflag = 0;
-                }
-            }
-
-            __enable_irq();
-        }
+			vdraw++;
+			if (vdraw == 2)
+			{
+				vdraw = 0;
+				vline++;
+				if (vline == verticalPixelCount)
+				{
+					vdraw = vline = vflag = 0;
+					vblankline = verticalOffset;
+				}
+			}
+		}
     }
     else
     {
@@ -164,6 +176,7 @@ __irq void TIM4_IRQHandler()
 
         vflag = 1;
         vline = 0;
+        vblankline = verticalOffset;
     }
     else
     {

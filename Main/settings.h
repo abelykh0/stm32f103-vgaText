@@ -1,12 +1,13 @@
 #ifndef __VIDEOSETTINGS_H__
 #define __VIDEOSETTINGS_H__
 
+// Colors
+#define BACK_COLOR 0x3F
+#define FORE_COLOR 0x10
+
 // Resolution
-//#define TIMING timing_720x576_48hz
-//#define	HSIZE_CHARS  26
-//#define	VSIZE_CHARS  35
 #define TIMING timing_640x480_60_01hz
-#define	HSIZE_CHARS  36
-#define	VSIZE_CHARS  30
+#define	HSIZE_CHARS  38
+#define	VSIZE_CHARS  29
 
 #endif /* __VIDEOSETTINGS_H__ */

@@ -1,11 +1,42 @@
 #include "vgatext.h"
 #include "startup.h"
 
+static uint8_t cursorCharacter;
+static uint8_t cursorCharacterPixels[8];
+
 namespace Vga
 {
 const uint8_t* font;
 uint8_t cursor_x = 0;
 uint8_t cursor_y = 0;
+bool cursor_visible = false;
+uint8_t charFromAddress(uint32_t address);
+uint32_t addressFromChar(uint8_t character);
+}
+
+void Vga::ShowCursor()
+{
+	if (!cursor_visible)
+	{
+		uint8_t** charPointer = (uint8_t**)&videoMemory[cursor_y * settings->TextColumns + cursor_x];
+		cursorCharacter = charFromAddress((uint32_t)*charPointer);
+		for (int i = 0; i < 8; i++)
+		{
+			cursorCharacterPixels[i] = ~(uint8_t)(*charPointer)[i];
+		}
+		*charPointer = cursorCharacterPixels;
+
+		cursor_visible = true;
+	}
+}
+
+void Vga::HideCursor()
+{
+	if (cursor_visible)
+	{
+		videoMemory[cursor_y * settings->TextColumns + cursor_x] = addressFromChar(cursorCharacter);
+		cursor_visible = false;
+	}
 }
 
 void Vga::InitVgaText(const uint8_t* f)
@@ -15,6 +46,12 @@ void Vga::InitVgaText(const uint8_t* f)
 
 void Vga::SetCursorPosition(uint8_t x, uint8_t y)
 {
+	bool cursorShown = cursor_visible;
+	if (cursorShown)
+	{
+		HideCursor();
+	}
+
 	cursor_x = x;
 	cursor_y = y;
 	if (cursor_x >= settings->TextColumns)
@@ -25,17 +62,22 @@ void Vga::SetCursorPosition(uint8_t x, uint8_t y)
 	{
 		cursor_y = settings->TextRows - 1;
 	}
+
+	if (cursorShown)
+	{
+		ShowCursor();
+	}
 }
 
 void Vga::PrintChar(uint16_t x, uint16_t y, uint8_t ch)
 {
-	if (x >= Vga::settings->TextColumns || y >= Vga::settings->TextRows)
+	if (x >= settings->TextColumns || y >= settings->TextRows)
 	{
 		// Invalid
 		return;
 	}
 
-	Vga::videoMemoryPixels[y * Vga::settings->TextColumns + x] = ch;
+	videoMemory[y * settings->TextColumns + x] = addressFromChar(ch);
 }
 
 static void cursorNext()
@@ -70,3 +112,14 @@ void Vga::Print(char* str)
     	cursorNext();
     }
 }
+
+uint8_t Vga::charFromAddress(uint32_t address)
+{
+	return (address - (uint32_t)font) >> 3;
+}
+
+uint32_t Vga::addressFromChar(uint8_t character)
+{
+	return (uint32_t)font + ((uint32_t)character << 3);
+}
+

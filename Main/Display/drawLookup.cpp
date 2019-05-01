@@ -1,4 +1,5 @@
 #include "drawlookup.h"
+#include "settings.h"
 
 const unsigned char drawLookup[] =
 {

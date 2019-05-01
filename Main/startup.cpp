@@ -8,7 +8,7 @@
 #include "Display/vgaText.h"
 #include "Keyboard/ps2Keyboard.h"
 
-static uint8_t _screenData[HSIZE_CHARS * VSIZE_CHARS];
+static uint32_t _screenData[HSIZE_CHARS * VSIZE_CHARS + 1];
 
 using namespace Vga;
 
@@ -16,7 +16,7 @@ static VideoSettings Video {
 	&TIMING,
 	1,
 	HSIZE_CHARS, VSIZE_CHARS,
-	_screenData
+	(uint8_t*)_screenData
 };
 extern "C" void initialize()
 {
@@ -30,7 +30,6 @@ extern "C" void setup()
 	// Initialize PS2 Keyboard
 	Ps2_Initialize();
 
-	ClearScreen();
 	Print("A23456789_123456789_123456789_123456789A");
 
 	for (int32_t y = 0; y < VSIZE_CHARS; y++)
@@ -43,6 +42,14 @@ extern "C" void setup()
 
 	SetCursorPosition(0, VSIZE_CHARS - 1);
 	Print("D23456789_123456789_123456789_123456789D");
+
+	SetCursorPosition(10, 10);
+	Print("X");
+	SetCursorPosition(10, 10);
+	SetCursorPosition(11, 11);
+	Print("W");
+	SetCursorPosition(11, 11);
+	ShowCursor();
 }
 
 extern "C" void loop()
