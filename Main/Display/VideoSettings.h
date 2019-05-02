@@ -12,14 +12,13 @@ class VideoSettings
   public:
 	const Vga::Timing* Timing;
 
-	uint8_t Scale;
-
 	// text resolution
 	uint8_t TextColumns;
 	uint8_t TextRows;
 
 	// video memory
-	uint8_t* VideoMemory;
+	uint8_t*  ScreenCharacters;
+	uint32_t* ScreenAttributes;
 };
 
 }

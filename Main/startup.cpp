@@ -8,15 +8,15 @@
 #include "Display/vgaText.h"
 #include "Keyboard/ps2Keyboard.h"
 
-static uint32_t _screenData[HSIZE_CHARS * VSIZE_CHARS + 1];
+static uint8_t _screenCharacters[HSIZE_CHARS * VSIZE_CHARS + 1];
+static uint32_t _screenAttributes[HSIZE_CHARS * VSIZE_CHARS + 1];
 
 using namespace Vga;
 
 static VideoSettings Video {
 	&TIMING,
-	1,
 	HSIZE_CHARS, VSIZE_CHARS,
-	(uint8_t*)_screenData
+	_screenCharacters, _screenAttributes
 };
 extern "C" void initialize()
 {

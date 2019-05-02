@@ -18,15 +18,15 @@ void Vga::ShowCursor()
 {
 	if (!cursor_visible)
 	{
-		uint8_t** charPointer = (uint8_t**)&videoMemory[cursor_y * settings->TextColumns + cursor_x];
-		cursorCharacter = charFromAddress((uint32_t)*charPointer);
-		for (int i = 0; i < 8; i++)
-		{
-			cursorCharacterPixels[i] = ~(uint8_t)(*charPointer)[i];
-		}
-		*charPointer = cursorCharacterPixels;
-
-		cursor_visible = true;
+//		uint8_t** charPointer = (uint8_t**)&videoMemory[cursor_y * settings->TextColumns + cursor_x];
+//		cursorCharacter = charFromAddress((uint32_t)*charPointer);
+//		for (int i = 0; i < 8; i++)
+//		{
+//			cursorCharacterPixels[i] = ~(uint8_t)(*charPointer)[i];
+//		}
+//		*charPointer = cursorCharacterPixels;
+//
+//		cursor_visible = true;
 	}
 }
 
@@ -34,8 +34,8 @@ void Vga::HideCursor()
 {
 	if (cursor_visible)
 	{
-		videoMemory[cursor_y * settings->TextColumns + cursor_x] = addressFromChar(cursorCharacter);
-		cursor_visible = false;
+//		videoMemory[cursor_y * settings->TextColumns + cursor_x] = addressFromChar(cursorCharacter);
+//		cursor_visible = false;
 	}
 }
 
@@ -77,7 +77,7 @@ void Vga::PrintChar(uint16_t x, uint16_t y, uint8_t ch)
 		return;
 	}
 
-	videoMemory[y * settings->TextColumns + x] = addressFromChar(ch);
+	ScreenCharacters[y * settings->TextColumns + x] = ch;
 }
 
 static void cursorNext()

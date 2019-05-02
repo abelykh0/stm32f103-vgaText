@@ -1,3 +1,4 @@
+#include <Display/normalAttribute.h>
 #include <string.h>
 
 #include "startup.h"
@@ -6,12 +7,12 @@
 #include "vgadraw.h"
 #include "vgaText.h"
 #include "font8x8.h"
-#include "drawLookup.h"
 
 namespace Vga
 {
 const VideoSettings* settings;
-uint32_t* videoMemory;
+uint8_t* ScreenCharacters;
+uint32_t* ScreenAttributes;
 }
 
 static TIM_HandleTypeDef htim2;
@@ -37,7 +38,8 @@ void Vga::InitVga(VideoSettings* videoSettings)
 {
 	settings = videoSettings;
 	const Timing* timing = videoSettings->Timing;
-	videoMemory = (uint32_t*)videoSettings->VideoMemory;
+	ScreenCharacters = videoSettings->ScreenCharacters;
+	ScreenAttributes = videoSettings->ScreenAttributes;
 	ClearScreen();
 
     GPIO_InitTypeDef gpioInit;
@@ -93,10 +95,10 @@ void Vga::InitVga(VideoSettings* videoSettings)
 
 void Vga::ClearScreen()
 {
-	uint32_t empty = addressFromChar(' ');
 	for (int i = 0; i <= HSIZE_CHARS * VSIZE_CHARS; i++)
 	{
-		videoMemory[i] = empty;
+		ScreenCharacters[i] = ' ';
+		ScreenAttributes[i] = (uint32_t)normalAttribute;
 	}
 }
 
@@ -140,9 +142,11 @@ __irq void TIM3_IRQHandler()
 		}
 		else if (vflag)
 		{
-			vgaDraw(&Vga::videoMemory[(vline / 8) * HSIZE_CHARS],
-				vline % 8,
-				(uint32_t*)drawLookup, GPIO_ODR);
+			int offset = (vline >> 3) * HSIZE_CHARS;
+			vgaDraw((uint8_t*)Vga::font + (vline & 0x07),
+				&Vga::ScreenCharacters[offset],
+				&Vga::ScreenAttributes[offset],
+				GPIO_ODR);
 
 			vdraw++;
 			if (vdraw == 2)

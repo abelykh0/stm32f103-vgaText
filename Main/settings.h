@@ -7,7 +7,7 @@
 
 // Resolution
 #define TIMING timing_640x480_60_01hz
-#define	HSIZE_CHARS  38
+#define	HSIZE_CHARS  34
 #define	VSIZE_CHARS  29
 
 #endif /* __VIDEOSETTINGS_H__ */

@@ -27,7 +27,8 @@
 namespace Vga
 {
 	extern const Vga::VideoSettings* settings;
-	extern uint32_t* videoMemory;
+	extern uint8_t* ScreenCharacters;
+	extern uint32_t* ScreenAttributes;
 	extern uint16_t horizontalPixelCount;
 
 	void InitVga(VideoSettings* videoSettings);

@@ -1,7 +1,7 @@
-#include "drawlookup.h"
+#include <Display/normalAttribute.h>
 #include "settings.h"
 
-const unsigned char drawLookup[] =
+const unsigned char normalAttribute[] =
 {
 	FORE_COLOR, FORE_COLOR, FORE_COLOR, FORE_COLOR,
 	FORE_COLOR, FORE_COLOR, FORE_COLOR, BACK_COLOR,
