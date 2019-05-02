@@ -24,15 +24,15 @@ vgaDraw:
 	push {r4, r5, r6, r7, r8}      @ 6
 
 	@ prepare
-	ldrb r5, [chr], #1         @ 2* r5 = {character}
-	ldr r6, [col], #4          @ 1* r6 = {character attribute}
-	ldrb r5, [fnt, r5, LSL #3] @ 1* r5 = {character pixels}
-	lsr r4, r5, #2             @ 1  r4 = {character pixels} >> 2
-	and r4, r4, #60            @ 1  r4 &= 0B00111100
+	ldrb r5, [chr], #1             @ 2* r5 = {character}
+	ldr r6, [col], #4              @ 1* r6 = {character attribute}
+	ldrb r5, [fnt, r5, LSL #3]     @ 1* r5 = {character pixels}
+	lsr r4, r5, #2                 @ 1  r4 = {character pixels} >> 2
+	and r4, r4, #60                @ 1  r4 &= 0B00111100
 
 	.rept HSIZE_CHARS
 
-		@ first 4 pixels, each pixel one byte (r6)
+		@ first 4 pixels, each pixel one byte (r7)
 
  		ldr r7, [r6, r4]           @ 2* r7 = {4 bytes for 1st part of character}
 		strb r7, [odr]             @ 2
@@ -49,7 +49,7 @@ vgaDraw:
  		ldr r6, [col], #4          @ 1* r6 = {character attribute}
 		strb r7, [odr]             @ 2
 
-		@ next 4 pixels, each pixel one byte  (r7)
+		@ next 4 pixels, each pixel one byte  (r8)
 
 		nop                        @ 1
 		ldrb r5, [chr], #1         @ 1* r5 = {character}
@@ -66,6 +66,7 @@ vgaDraw:
 		ror r8, #8                 @ 1
  		and r4, r4, #60            @ 1  r4 &= 0B00111100
 		strb r8, [odr]             @ 2
+
 	.endr
 
 	@ 0 at the end

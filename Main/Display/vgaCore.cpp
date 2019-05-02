@@ -1,4 +1,3 @@
-#include <Display/normalAttribute.h>
 #include <string.h>
 
 #include "startup.h"
@@ -6,7 +5,9 @@
 #include "timing.h"
 #include "vgadraw.h"
 #include "vgaText.h"
+
 #include "font8x8.h"
+#include "normalAttribute.h"
 
 namespace Vga
 {

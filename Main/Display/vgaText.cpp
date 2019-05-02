@@ -1,8 +1,7 @@
 #include "vgatext.h"
 #include "startup.h"
-
-static uint8_t cursorCharacter;
-static uint8_t cursorCharacterPixels[8];
+#include "normalAttribute.h"
+#include "inversedAttribute.h"
 
 namespace Vga
 {
@@ -18,15 +17,9 @@ void Vga::ShowCursor()
 {
 	if (!cursor_visible)
 	{
-//		uint8_t** charPointer = (uint8_t**)&videoMemory[cursor_y * settings->TextColumns + cursor_x];
-//		cursorCharacter = charFromAddress((uint32_t)*charPointer);
-//		for (int i = 0; i < 8; i++)
-//		{
-//			cursorCharacterPixels[i] = ~(uint8_t)(*charPointer)[i];
-//		}
-//		*charPointer = cursorCharacterPixels;
-//
-//		cursor_visible = true;
+
+		ScreenAttributes[cursor_y * settings->TextColumns + cursor_x] = (uint32_t)inversedAttribute;
+		cursor_visible = true;
 	}
 }
 
@@ -34,8 +27,8 @@ void Vga::HideCursor()
 {
 	if (cursor_visible)
 	{
-//		videoMemory[cursor_y * settings->TextColumns + cursor_x] = addressFromChar(cursorCharacter);
-//		cursor_visible = false;
+		ScreenAttributes[cursor_y * settings->TextColumns + cursor_x] = (uint32_t)normalAttribute;
+		cursor_visible = false;
 	}
 }
 

@@ -1,7 +1,7 @@
-#include <Display/normalAttribute.h>
+#include "inversedAttribute.h"
 #include "settings.h"
 
-const unsigned char normalAttribute[] =
+const unsigned char inversedAttribute[] =
 {
 	FORE_COLOR, FORE_COLOR, FORE_COLOR, FORE_COLOR,
 	FORE_COLOR, FORE_COLOR, FORE_COLOR, BACK_COLOR,
