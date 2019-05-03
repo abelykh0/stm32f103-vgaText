@@ -1,7 +1,7 @@
+#include <string.h>
 #include "vgatext.h"
 #include "startup.h"
-#include "normalAttribute.h"
-#include "inversedAttribute.h"
+#include "standardAttribute.h"
 
 namespace Vga
 {
@@ -11,14 +11,14 @@ uint8_t cursor_y = 0;
 bool cursor_visible = false;
 uint8_t charFromAddress(uint32_t address);
 uint32_t addressFromChar(uint8_t character);
+void utf8ToCP866(char* utf8, char* result);
 }
 
 void Vga::ShowCursor()
 {
 	if (!cursor_visible)
 	{
-
-		ScreenAttributes[cursor_y * settings->TextColumns + cursor_x] = (uint32_t)inversedAttribute;
+		ScreenAttributes[cursor_y * settings->TextColumns + cursor_x] += 16 * 4;
 		cursor_visible = true;
 	}
 }
@@ -27,7 +27,7 @@ void Vga::HideCursor()
 {
 	if (cursor_visible)
 	{
-		ScreenAttributes[cursor_y * settings->TextColumns + cursor_x] = (uint32_t)normalAttribute;
+		ScreenAttributes[cursor_y * settings->TextColumns + cursor_x] -= 16 * 4;
 		cursor_visible = false;
 	}
 }
@@ -99,15 +99,19 @@ void Vga::Print(const char* str)
 
 void Vga::Print(char* str)
 {
+	char buf[HSIZE_CHARS];
+	utf8ToCP866(str, buf);
+	char* convertedStr = buf;
+
 	bool cursorShown = cursor_visible;
 	if (cursorShown)
 	{
 		HideCursor();
 	}
 
-    while (*str)
+    while (*convertedStr)
     {
-    	PrintChar(cursor_x, cursor_y, *str++);
+    	PrintChar(cursor_x, cursor_y, *convertedStr++);
     	cursorNext();
     }
 
@@ -127,3 +131,44 @@ uint32_t Vga::addressFromChar(uint8_t character)
 	return (uint32_t)font + ((uint32_t)character << 3);
 }
 
+void Vga::utf8ToCP866(char* utf8, char* result)
+{
+	// Converts some UTF8 characters to code page 866
+	int strLen = strlen(utf8);
+	uint16_t twoByteSequence = 0;
+	for (int i = 0; i < strLen; i++)
+	{
+		char ch = utf8[i];
+		if (twoByteSequence > 0)
+		{
+			twoByteSequence = (twoByteSequence << 8) + ch;
+
+			if (twoByteSequence >= 0xD090 && twoByteSequence <= 0xD0BF)
+			{
+				// "À".."ï"
+				*result = (char)(twoByteSequence - 0xD010);
+			}
+			else if (twoByteSequence >= 0xD180 && twoByteSequence <= 0xD18F)
+			{
+				// "ð".."ÿ"
+				*result = (char)(twoByteSequence - 0xD0A0);
+			}
+
+			twoByteSequence = 0;
+		}
+		else
+		{
+			if ((ch & 0B11100000) == 0B11000000)
+			{
+				twoByteSequence = ch;
+				continue;
+			}
+
+			*result = utf8[i];
+		}
+
+		result++;
+	}
+
+	*result = '\0';
+}

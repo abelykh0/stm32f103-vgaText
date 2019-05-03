@@ -30,7 +30,8 @@ extern "C" void setup()
 	// Initialize PS2 Keyboard
 	Ps2_Initialize();
 
-	Print("A23456789_123456789_123456789_123456789A");
+	SetCursorPosition(10, 0);
+	Print("русские буквы");
 
 	for (int32_t y = 0; y < VSIZE_CHARS; y++)
 	{
