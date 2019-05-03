@@ -73,6 +73,13 @@ extern "C" void loop()
 					Vga::SetCursorPosition(Vga::cursor_x - 1, Vga::cursor_y);
 				}
 				break;
+			case KEY_BACKSPACE:
+				if (Vga::cursor_x > 0)
+				{
+					Vga::SetCursorPosition(Vga::cursor_x - 1, Vga::cursor_y);
+					Vga::PrintChar(Vga::cursor_x, Vga::cursor_y, ' ');
+				}
+				break;
 			case KEY_RIGHTARROW:
 				if (Vga::cursor_x < HSIZE_CHARS - 1)
 				{
