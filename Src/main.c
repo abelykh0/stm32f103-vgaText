@@ -61,7 +61,7 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+static void MX_TIM3_Init(void) __attribute__((unused));
 /* USER CODE END 0 */
 
 /**

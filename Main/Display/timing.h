@@ -44,6 +44,7 @@ struct Timing
  */
 extern Timing const timing_640x480_60hz;
 extern Timing const timing_640x480_60_01hz;
+extern Timing const timing_800x600_56hz;
 
 } // namespace Vga
 
