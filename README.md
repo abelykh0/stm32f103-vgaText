@@ -1,5 +1,9 @@
-# stm32f103-vgaText
+## stm32f103-vgaText
 VGA text demo on STM32F103 "bluepill"
+
+## What it can do
+* Display 34x29 characters
+* Use PS/2 keyboard to type and move cursor
 
 Software: Install free IDE [System Workbench for STM32](https://www.st.com/en/development-tools/sw4stm32.html/). I am using Windows 10, however STMicroelectronics claims that it also supports Linux and Mac.
 
