@@ -337,7 +337,6 @@ inline void Update(uint8_t dataBit)
         break;
 
     case PARITY:
-        _parity &= 1;
         if (_parity == dataBit) 
         {
             // Parity error
@@ -367,7 +366,7 @@ inline void Update(uint8_t dataBit)
     }
 }
 
-void Vga::HBlankInterrupt()
+extern "C" void HBlankInterrupt()
 {
     uint32_t gpioBits = GPIOB->IDR;
     uint16_t clkBit = (gpioBits & CLK_PIN);

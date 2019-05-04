@@ -33,8 +33,6 @@ namespace Vga
 
 	void InitVga(VideoSettings* videoSettings);
     void ClearScreen();
-
-	extern void HBlankInterrupt();
 }
 
 #endif

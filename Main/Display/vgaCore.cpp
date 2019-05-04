@@ -170,7 +170,8 @@ __irq void TIM3_IRQHandler()
         HAL_TIM_IRQHandler(&htim3);
     }
 
-	Vga::HBlankInterrupt();
+    SCB->ICSR = SCB->ICSR | SCB_ICSR_PENDSVSET_Msk;
+	//Vga::HBlankInterrupt();
 }
 
 //*****************************************************************************
