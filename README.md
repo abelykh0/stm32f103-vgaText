@@ -1,5 +1,5 @@
 ## stm32f103-vgaText
-VGA text demo on STM32F103 "bluepill" (36x37 characters)
+VGA text demo on STM32F103 "bluepill"
 
 ## What it can do
 * Display 36x37 characters
