@@ -26,6 +26,7 @@ How to connect wires:
 
 ## Overview
 The STM32F103 is a Cortex-M3 microcontroller that has neither a video controller, nor enough RAM for a framebuffer at any reasonable resolution.
+
 This demo works around this to produce a reasonable quality 800x600 video with 64 colors to display 36x37 (1,332) 8x8 pixel characters. It uses three timers and a GPIO port. In addition to VGA output, the demo also gets input from a PS/2 keyboard.
 The release build is using less than half of the 20K available RAM.
 
