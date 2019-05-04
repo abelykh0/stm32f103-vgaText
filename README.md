@@ -34,5 +34,6 @@ The release build is using less than half of the 20K available RAM.
 * Timer TIM4 is used to generate vertical sync signal
 * Timer TIM2 is used as a "shock absorber" to make the VGA stable
 * Timer TIM3 is used to generate horizontal sync signal
+* The code that reads the PS/2 keyboard input is running inside SyncSV interrupt
 
 
