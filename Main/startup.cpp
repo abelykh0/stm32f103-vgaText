@@ -49,7 +49,7 @@ extern "C" void setup()
     {
     	for (uint8_t j = 0; j < 4; j++)
     	{
-            _allColorsAttribute[(color >> 2) + j] = color;
+            _allColorsAttribute[(color << 2) + j] = color;
     	}
     }
 
@@ -58,21 +58,22 @@ extern "C" void setup()
     {
     	sprintf(buf, BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(i));
 
-    	SetCursorPosition(4 + (i % 4) * 7, 3 + (i / 4) * 2);
+    	SetCursorPosition(4 + (i % 4) * 7, 4 + (i / 4) * 2);
     	Print("      ");
 
     	for (uint8_t j = 0; j < 6; j++)
     	{
-    		_screenAttributes[(4 + (i % 4) * 7) + j + (3 + (i / 4) * 2) * HSIZE_CHARS] = (uint32_t)&_allColorsAttribute[i * 4];
+    		_screenAttributes[(4 + (i % 4) * 7) + j + (4 + (i / 4) * 2) * HSIZE_CHARS] = (uint32_t)&_allColorsAttribute[i * 4];
     	}
 
-    	SetCursorPosition(4 + (i % 4) * 7, 2 + (i / 4) * 2);
+    	SetCursorPosition(4 + (i % 4) * 7, 3 + (i / 4) * 2);
     	Print(buf);
     }
 
 	// Initialize PS2 Keyboard
 	Ps2_Initialize();
 
+	SetCursorPosition(1, 1);
 	ShowCursor();
 }
 
