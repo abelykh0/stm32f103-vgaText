@@ -29,8 +29,8 @@ Timing const timing_640x480_60_01hz =
     .horizSyncPolarity = Timing::Polarity::negative,
     .horizWholeLine = 792,
     .horizSyncPulse = 88,
-    .horizStartDraw = 88 - 32,
-	.horizLead = -25,
+    .horizStartDraw = 140,
+	.horizLead = 0,
 
 	.verticalPixels = 480,
     .verticalSyncPolarity = Timing::Polarity::negative,

@@ -1,4 +1,3 @@
-#include <Display/standardAttribute.h>
 #include <string.h>
 
 #include "startup.h"
@@ -6,7 +5,6 @@
 #include "timing.h"
 #include "vgadraw.h"
 #include "vgaText.h"
-
 #include "font8x8.h"
 
 namespace Vga
@@ -14,6 +12,10 @@ namespace Vga
 const VideoSettings* settings;
 uint8_t* ScreenCharacters;
 uint32_t* ScreenAttributes;
+
+// Attribute in RAM vs. flash makes a big difference
+static uint8_t StandardAttribute[128];
+static void InitAttribute(uint8_t* attribute, uint8_t backColor, uint8_t foreColor);
 }
 
 static TIM_HandleTypeDef htim2;
@@ -41,6 +43,7 @@ void Vga::InitVga(VideoSettings* videoSettings)
 	const Timing* timing = videoSettings->Timing;
 	ScreenCharacters = videoSettings->ScreenCharacters;
 	ScreenAttributes = videoSettings->ScreenAttributes;
+	InitAttribute(StandardAttribute, BACK_COLOR, FORE_COLOR);
 	ClearScreen();
 
     GPIO_InitTypeDef gpioInit;
@@ -63,7 +66,7 @@ void Vga::InitVga(VideoSettings* videoSettings)
 
     GPIO_ODR = (uint8_t*)&GPIOA->ODR;
 
-	double realPixelsPerPixel = timing->pixel_frequency_mhz / 12;
+	double realPixelsPerPixel = timing->pixel_frequency_mhz / 18;
 	uint16_t usedHorizontalPixels = HSIZE_CHARS * 8 * realPixelsPerPixel;
 	if (usedHorizontalPixels > timing->horizPixels * realPixelsPerPixel)
 	{
@@ -99,7 +102,7 @@ void Vga::ClearScreen()
 	for (int i = 0; i <= HSIZE_CHARS * VSIZE_CHARS; i++)
 	{
 		ScreenCharacters[i] = ' ';
-		ScreenAttributes[i] = (uint32_t)normalAttribute;
+		ScreenAttributes[i] = (uint32_t)StandardAttribute;
 	}
 }
 
@@ -167,7 +170,7 @@ __irq void TIM3_IRQHandler()
         HAL_TIM_IRQHandler(&htim3);
     }
 
-    Vga::HBlankInterrupt();
+	Vga::HBlankInterrupt();
 }
 
 //*****************************************************************************
@@ -337,3 +340,22 @@ static void InitHSync(
     //__HAL_TIM_ENABLE(&htim3);
 }
 
+void Vga::InitAttribute(uint8_t* attribute, uint8_t backColor, uint8_t foreColor)
+{
+	for (uint8_t i = 0; i < 16; i++)
+	{
+		uint8_t value = i;
+		for (uint8_t bit = 0; bit < 4; bit++)
+		{
+			uint8_t index = (i << 2) + bit;
+
+			// Normal
+			attribute[index] = (value & 0x08) ?  foreColor : backColor;
+
+			// Inverted
+			attribute[index + 16 * 4] = (value & 0x08) ?  backColor : foreColor;
+
+			value <<= 1;
+		}
+	}
+}

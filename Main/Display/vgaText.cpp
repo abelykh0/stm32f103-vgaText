@@ -1,7 +1,6 @@
 #include <string.h>
 #include "vgatext.h"
 #include "startup.h"
-#include "standardAttribute.h"
 
 namespace Vga
 {

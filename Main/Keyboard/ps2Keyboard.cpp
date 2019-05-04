@@ -390,7 +390,7 @@ inline void Update(uint8_t dataBit)
 void Vga::HBlankInterrupt()
 {
     uint32_t gpioBits = GPIOB->IDR;
-    uint8_t clkBit = (gpioBits & CLK_PIN) ? 1 : 0;
+    uint16_t clkBit = (gpioBits & CLK_PIN);
     uint8_t dataBit = (gpioBits & DATA_PIN) ? 1 : 0;
 
     if (clkBit == 0)
