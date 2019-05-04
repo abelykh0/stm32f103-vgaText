@@ -77,6 +77,10 @@ void Vga::PrintChar(uint16_t x, uint16_t y, uint8_t ch, uint32_t attribute)
 	if (attribute != 0)
 	{
 		ScreenAttributes[offset] = attribute;
+		if (cursor_visible && x == cursor_x && y == cursor_y)
+		{
+			ScreenAttributes[offset] += 16 * 4;
+		}
 	}
 }
 
@@ -90,6 +94,10 @@ void Vga::SetAttribute(uint16_t x, uint16_t y, uint32_t attribute)
 
 	int offset = y * settings->TextColumns + x;
 	ScreenAttributes[offset] = attribute;
+	if (cursor_visible && x == cursor_x && y == cursor_y)
+	{
+		ScreenAttributes[offset] += 16 * 4;
+	}
 }
 
 void Vga::Print(const char* str)
