@@ -14,7 +14,7 @@ uint8_t* ScreenCharacters;
 uint32_t* ScreenAttributes;
 
 // Attribute in RAM vs. flash makes a big difference
-static uint8_t StandardAttribute[128];
+uint8_t StandardAttribute[128];
 static void InitAttribute(uint8_t* attribute, uint8_t backColor, uint8_t foreColor);
 }
 

@@ -59,12 +59,7 @@ extern "C" void setup()
     	sprintf(buf, BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(i));
 
     	SetCursorPosition(4 + (i % 4) * 7, 4 + (i / 4) * 2);
-    	Print("      ");
-
-    	for (uint8_t j = 0; j < 6; j++)
-    	{
-    		_screenAttributes[(4 + (i % 4) * 7) + j + (4 + (i / 4) * 2) * HSIZE_CHARS] = (uint32_t)&_allColorsAttribute[i * 4];
-    	}
+    	Print("      ", (uint32_t)&_allColorsAttribute[i * 4]);
 
     	SetCursorPosition(4 + (i % 4) * 7, 3 + (i / 4) * 2);
     	Print(buf);
@@ -94,6 +89,7 @@ extern "C" void loop()
 			case KEY_LEFTARROW:
 				if (Vga::cursor_x > 0)
 				{
+					Vga::SetAttribute(Vga::cursor_x - 1, Vga::cursor_y, (int32_t)Vga::StandardAttribute);
 					Vga::SetCursorPosition(Vga::cursor_x - 1, Vga::cursor_y);
 				}
 				break;
@@ -101,24 +97,27 @@ extern "C" void loop()
 				if (Vga::cursor_x > 0)
 				{
 					Vga::SetCursorPosition(Vga::cursor_x - 1, Vga::cursor_y);
-					Vga::PrintChar(Vga::cursor_x, Vga::cursor_y, ' ');
+					Vga::PrintChar(Vga::cursor_x, Vga::cursor_y, ' ', (int32_t)Vga::StandardAttribute);
 				}
 				break;
 			case KEY_RIGHTARROW:
 				if (Vga::cursor_x < HSIZE_CHARS - 1)
 				{
+					Vga::SetAttribute(Vga::cursor_x + 1, Vga::cursor_y, (int32_t)Vga::StandardAttribute);
 					Vga::SetCursorPosition(Vga::cursor_x + 1, Vga::cursor_y);
 				}
 				break;
 			case KEY_UPARROW:
 				if (Vga::cursor_y > 0)
 				{
+					Vga::SetAttribute(Vga::cursor_x, Vga::cursor_y - 1, (int32_t)Vga::StandardAttribute);
 					Vga::SetCursorPosition(Vga::cursor_x, Vga::cursor_y - 1);
 				}
 				break;
 			case KEY_DOWNARROW:
 				if (Vga::cursor_y < VSIZE_CHARS - 1)
 				{
+					Vga::SetAttribute(Vga::cursor_x, Vga::cursor_y + 1, (int32_t)Vga::StandardAttribute);
 					Vga::SetCursorPosition(Vga::cursor_x, Vga::cursor_y + 1);
 				}
 				break;
@@ -128,7 +127,7 @@ extern "C" void loop()
 				if (buf[0] != '\0')
 				{
 					buf[1] = '\0';
-					Vga::Print(buf);
+					Vga::Print(buf, (int32_t)Vga::StandardAttribute);
 				}
 			}
 		}

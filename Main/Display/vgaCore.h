@@ -30,6 +30,7 @@ namespace Vga
 	extern uint8_t* ScreenCharacters;
 	extern uint32_t* ScreenAttributes;
 	extern uint16_t horizontalPixelCount;
+	extern uint8_t StandardAttribute[128];
 
 	void InitVga(VideoSettings* videoSettings);
     void ClearScreen();

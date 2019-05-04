@@ -8,9 +8,8 @@ const uint8_t* font;
 uint8_t cursor_x = 0;
 uint8_t cursor_y = 0;
 bool cursor_visible = false;
-uint8_t charFromAddress(uint32_t address);
-uint32_t addressFromChar(uint8_t character);
 void utf8ToCP866(char* utf8, char* result);
+void cursorNext();
 }
 
 void Vga::ShowCursor()
@@ -63,40 +62,50 @@ void Vga::SetCursorPosition(uint8_t x, uint8_t y)
 
 void Vga::PrintChar(uint16_t x, uint16_t y, uint8_t ch)
 {
+	Vga::PrintChar(x, y, ch, 0);
+}
+void Vga::PrintChar(uint16_t x, uint16_t y, uint8_t ch, uint32_t attribute)
+{
 	if (x >= settings->TextColumns || y >= settings->TextRows)
 	{
 		// Invalid
 		return;
 	}
 
-	ScreenCharacters[y * settings->TextColumns + x] = ch;
+	int offset = y * settings->TextColumns + x;
+	ScreenCharacters[offset] = ch;
+	if (attribute != 0)
+	{
+		ScreenAttributes[offset] = attribute;
+	}
 }
 
-static void cursorNext()
+void Vga::SetAttribute(uint16_t x, uint16_t y, uint32_t attribute)
 {
-    uint8_t x = Vga::cursor_x;
-    uint8_t y = Vga::cursor_y;
-    if (x < Vga::settings->TextColumns - 1)
-    {
-        x++;
-    }
-    else
-    {
-        if (y < Vga::settings->TextRows - 1)
-        {
-            x = 0;
-            y++;
-        }
-    }
-    Vga::SetCursorPosition(x, y);
+	if (x >= settings->TextColumns || y >= settings->TextRows)
+	{
+		// Invalid
+		return;
+	}
+
+	int offset = y * settings->TextColumns + x;
+	ScreenAttributes[offset] = attribute;
 }
 
 void Vga::Print(const char* str)
 {
 	Print((char*)str);
 }
+void Vga::Print(const char* str, uint32_t attribute)
+{
+	Print((char*)str, attribute);
+}
 
 void Vga::Print(char* str)
+{
+	Print(str, 0);
+}
+void Vga::Print(char* str, uint32_t attribute)
 {
 	char buf[HSIZE_CHARS];
 	utf8ToCP866(str, buf);
@@ -110,7 +119,7 @@ void Vga::Print(char* str)
 
     while (*convertedStr)
     {
-    	PrintChar(cursor_x, cursor_y, *convertedStr++);
+    	PrintChar(cursor_x, cursor_y, *convertedStr++, attribute);
     	cursorNext();
     }
 
@@ -120,14 +129,30 @@ void Vga::Print(char* str)
 	}
 }
 
-uint8_t Vga::charFromAddress(uint32_t address)
+void Vga::PrintUtf8(const char* str)
 {
-	return (address - (uint32_t)font) >> 3;
+	char buf[HSIZE_CHARS];
+	utf8ToCP866((char*)str, buf);
+	Print(buf);
 }
 
-uint32_t Vga::addressFromChar(uint8_t character)
+void Vga::cursorNext()
 {
-	return (uint32_t)font + ((uint32_t)character << 3);
+    uint8_t x = cursor_x;
+    uint8_t y = cursor_y;
+    if (x < settings->TextColumns - 1)
+    {
+        x++;
+    }
+    else
+    {
+        if (y < settings->TextRows - 1)
+        {
+            x = 0;
+            y++;
+        }
+    }
+    SetCursorPosition(x, y);
 }
 
 void Vga::utf8ToCP866(char* utf8, char* result)
