@@ -1,10 +1,11 @@
 ## stm32f103-vgaText
-VGA text demo on STM32F103 "bluepill"
+VGA text demo on STM32F103 "bluepill" (36x37 characters)
 
 ## What it can do
-* Display 34x29 characters
+* Display 36x37 characters
 * Use PS/2 keyboard to type and move cursor
 
+## Instructions
 Software: Install free IDE [System Workbench for STM32](https://www.st.com/en/development-tools/sw4stm32.html/). I am using Windows 10, however STMicroelectronics claims that it also supports Linux and Mac.
 
 How to connect wires:
@@ -22,3 +23,5 @@ How to connect wires:
 | PB10 | CLK | Resistor 2K2 to keyboard CLK and resistor 3K3 to GND
 | PB11 | DATA | Resistor 2K2 to keyboard DATA and resistor 3K3 to GND
 | G | Ground | | VGA Ground (5,6,7,8,10)
+
+## More Info
