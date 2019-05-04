@@ -161,7 +161,7 @@ void Vga::cursorNext(uint32_t attribute)
         }
     }
 
-    if (attribute != 0)
+    if (cursor_visible && attribute != 0)
     {
     	SetAttribute(x, y, attribute);
     }
