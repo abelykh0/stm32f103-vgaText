@@ -6,6 +6,20 @@ VGA text demo on STM32F103 "bluepill"
 * Use PS/2 keyboard to type and move cursor
 
 ## Instructions
+
+| Hardware      |    Qty|
+| ------------- | -----:|
+| [STM32F103 "Blue Pill"](https://wiki.stm32duino.com/index.php?title=Blue_Pill) board | 1
+| VGA connector | 1
+| PS/2 Keyboard | 1
+| Resistors 470 Ohm | 3
+| Resistors 680 Ohm | 3
+| Resistors 2.2 KOhm | 2
+| Resistors 3.3 KOhm | 2
+| Breadboard | 1
+| Jumper wires | 20
+| ST-Link v2 or clone | 1
+
 Software: Install free IDE [System Workbench for STM32](https://www.st.com/en/development-tools/sw4stm32.html/). I am using Windows 10, however STMicroelectronics claims that it also supports Linux and Mac.
 
 How to connect wires:
