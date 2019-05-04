@@ -27,29 +27,31 @@ extern "C" void setup()
 	InitVga(&Video);
 	InitVgaText(font8x8);
 
+    // Display frame
+    PrintChar(0, 0, '\xC9'); // ╔
+    PrintChar(HSIZE_CHARS - 1, 0, '\xBB'); // ╗
+    PrintChar(0, VSIZE_CHARS - 1, '\xC8'); // ╚
+    PrintChar(HSIZE_CHARS - 1, VSIZE_CHARS - 1, '\xBC'); // ╝
+    for (int i = 1; i < HSIZE_CHARS - 1; i++)
+    {
+    	PrintChar(i, 0, '\x0CD'); // ═
+    	PrintChar(i, VSIZE_CHARS - 1, '\x0CD'); // ═
+    }
+    for (int i = 1; i < VSIZE_CHARS - 1; i++)
+    {
+    	PrintChar(0, i, '\x0BA'); // ║
+    	PrintChar(HSIZE_CHARS - 1, i, '\x0BA'); // ║
+    }
+
 	// Initialize PS2 Keyboard
 	Ps2_Initialize();
 
-	SetCursorPosition(10, 0);
-	Print("русские буквы");
+	SetCursorPosition(5, 10);
+	Print("Some 2-byte UFT8 characters:");
+	SetCursorPosition(5, 11);
+	Print("      русские буквы         ");
 
-	for (int32_t y = 0; y < VSIZE_CHARS; y++)
-	{
-		char buf[30];
-		snprintf(buf, 30, "%02d", (uint16_t)y + 1);
-		SetCursorPosition(0, y);
-		Print(buf);
-	}
-
-	SetCursorPosition(0, VSIZE_CHARS - 1);
-	Print("D23456789_123456789_123456789_123456789D");
-
-	SetCursorPosition(10, 10);
-	Print("X");
-	SetCursorPosition(10, 10);
-	SetCursorPosition(11, 11);
-	Print("W");
-	SetCursorPosition(11, 11);
+	SetCursorPosition(5, 12);
 	ShowCursor();
 }
 
