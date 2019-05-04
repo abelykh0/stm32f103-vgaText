@@ -6,6 +6,20 @@ VGA text demo on STM32F103 "bluepill"
 * Use PS/2 keyboard to type and move cursor
 
 ## Instructions
+
+| Hardware      |    Qty|
+| ------------- | -----:|
+| [STM32F103 "Blue Pill"](https://wiki.stm32duino.com/index.php?title=Blue_Pill) board | 1
+| VGA connector | 1
+| PS/2 Keyboard | 1
+| Resistors 470 Ohm | 3
+| Resistors 680 Ohm | 3
+| Resistors 2.2 KOhm | 2
+| Resistors 3.3 KOhm | 2
+| Breadboard | 1
+| Jumper wires | 20
+| ST-Link v2 or clone | 1
+
 Software: Install free IDE [System Workbench for STM32](https://www.st.com/en/development-tools/sw4stm32.html/). I am using Windows 10, however STMicroelectronics claims that it also supports Linux and Mac.
 
 How to connect wires:
@@ -24,4 +38,16 @@ How to connect wires:
 | PB11 | DATA | Resistor 2K2 to keyboard DATA and resistor 3K3 to GND
 | G | Ground | | VGA Ground (5,6,7,8,10)
 
-## More Info
+## Overview
+The STM32F103 is a Cortex-M3 microcontroller that has neither a video controller, nor enough RAM for a framebuffer at any reasonable resolution.
+
+This demo works around this to produce a reasonable quality 800x600 video with 64 colors to display 36x37 (1,332) 8x8 pixel characters. It uses three timers and a GPIO port. In addition to VGA output, the demo also gets input from a PS/2 keyboard.
+The release build is using less than half of the 20K available RAM.
+
+## Implementation Details
+* Timer TIM4 is used to generate vertical sync signal
+* Timer TIM2 is used as a "shock absorber" to make the VGA stable
+* Timer TIM3 is used to generate horizontal sync signal
+* The code that reads the PS/2 keyboard input is running inside SyncSV interrupt
+
+
