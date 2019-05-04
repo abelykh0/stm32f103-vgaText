@@ -9,7 +9,7 @@ uint8_t cursor_x = 0;
 uint8_t cursor_y = 0;
 bool cursor_visible = false;
 void utf8ToCP866(char* utf8, char* result);
-void cursorNext();
+void cursorNext(uint32_t attribute);
 }
 
 void Vga::ShowCursor()
@@ -128,7 +128,7 @@ void Vga::Print(char* str, uint32_t attribute)
     while (*convertedStr)
     {
     	PrintChar(cursor_x, cursor_y, *convertedStr++, attribute);
-    	cursorNext();
+    	cursorNext(attribute);
     }
 
 	if (cursorShown)
@@ -144,7 +144,7 @@ void Vga::PrintUtf8(const char* str)
 	Print(buf);
 }
 
-void Vga::cursorNext()
+void Vga::cursorNext(uint32_t attribute)
 {
     uint8_t x = cursor_x;
     uint8_t y = cursor_y;
@@ -159,6 +159,11 @@ void Vga::cursorNext()
             x = 0;
             y++;
         }
+    }
+
+    if (attribute != 0)
+    {
+    	SetAttribute(x, y, attribute);
     }
     SetCursorPosition(x, y);
 }
