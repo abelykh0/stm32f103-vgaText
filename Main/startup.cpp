@@ -10,6 +10,7 @@
 
 static uint8_t _screenCharacters[HSIZE_CHARS * VSIZE_CHARS + 1];
 static uint32_t _screenAttributes[HSIZE_CHARS * VSIZE_CHARS + 1];
+static uint8_t _allColorsAttribute[256];
 
 using namespace Vga;
 
@@ -43,15 +44,35 @@ extern "C" void setup()
     	PrintChar(HSIZE_CHARS - 1, i, '\x0BA'); // ║
     }
 
+    // This is used to display 64 colors using a space character
+    for (uint8_t color = 0; color < 64; color++)
+    {
+    	for (uint8_t j = 0; j < 4; j++)
+    	{
+            _allColorsAttribute[(color >> 2) + j] = color;
+    	}
+    }
+
+    char buf[20];
+    for (int i = 0; i < 64; i++)
+    {
+    	sprintf(buf, BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(i));
+
+    	SetCursorPosition(4 + (i % 4) * 7, 3 + (i / 4) * 2);
+    	Print("      ");
+
+    	for (uint8_t j = 0; j < 6; j++)
+    	{
+    		_screenAttributes[(4 + (i % 4) * 7) + j + (3 + (i / 4) * 2) * HSIZE_CHARS] = (uint32_t)&_allColorsAttribute[i * 4];
+    	}
+
+    	SetCursorPosition(4 + (i % 4) * 7, 2 + (i / 4) * 2);
+    	Print(buf);
+    }
+
 	// Initialize PS2 Keyboard
 	Ps2_Initialize();
 
-	SetCursorPosition(5, 10);
-	Print("Some 2-byte UFT8 characters:");
-	SetCursorPosition(5, 11);
-	Print("      русские буквы         ");
-
-	SetCursorPosition(5, 12);
 	ShowCursor();
 }
 
