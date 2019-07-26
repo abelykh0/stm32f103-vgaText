@@ -9,7 +9,7 @@
 namespace Vga
 {
 const VideoSettings* settings;
-uint8_t* ScreenCharacters;
+uint16_t* ScreenCharacters;
 uint32_t* ScreenAttributes;
 
 // Attribute in RAM vs. flash makes a big difference
@@ -96,10 +96,12 @@ void Vga::InitVga(VideoSettings* videoSettings)
 
 void Vga::ClearScreen()
 {
-	for (int i = 0; i <= HSIZE_CHARS * VSIZE_CHARS; i++)
+	for (int y = 0; y < VSIZE_CHARS; y++)
 	{
-		ScreenCharacters[i] = ' ';
-		ScreenAttributes[i] = (uint32_t)StandardAttribute;
+		for (int x = 0; x < HSIZE_CHARS; x++)
+		{
+			Vga::PrintChar(x, y, ' ', (uint32_t)StandardAttribute);
+		}
 	}
 }
 
@@ -143,7 +145,7 @@ __irq void TIM3_IRQHandler()
 		}
 		else if (vflag)
 		{
-			int offset = (vline >> 3) * HSIZE_CHARS;
+			int offset = (vline >> 4) * HSIZE_CHARS;
 			vgaDraw((uint8_t*)Vga::font + (vline & 0x0F),
 				&Vga::ScreenCharacters[offset],
 				&Vga::ScreenAttributes[offset],

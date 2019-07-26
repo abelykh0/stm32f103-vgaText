@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-void vgaDraw(uint8_t* font, uint8_t* characters, uint32_t* attributes, uint8_t* dest);
+void vgaDraw(uint8_t* font, uint16_t* characters, uint32_t* attributes, uint8_t* dest);
 
 #ifdef __cplusplus
 }

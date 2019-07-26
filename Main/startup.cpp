@@ -8,7 +8,7 @@
 #include "Display/vgaText.h"
 #include "Keyboard/ps2Keyboard.h"
 
-static uint8_t _screenCharacters[HSIZE_CHARS * VSIZE_CHARS + 1];
+static uint16_t _screenCharacters[HSIZE_CHARS * VSIZE_CHARS + 1];
 static uint32_t _screenAttributes[HSIZE_CHARS * VSIZE_CHARS + 1];
 static uint8_t _allColorsAttribute[256];
 

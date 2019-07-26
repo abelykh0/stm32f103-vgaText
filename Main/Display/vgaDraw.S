@@ -24,7 +24,7 @@ vgaDraw:
 	push {r4, r5, r6, r7, r8}      @ 6
 
 	@ prepare
-	ldrb r5, [chr], #1             @ 2* r5 = {character}
+	ldrh r5, [chr], #2             @ 2* r5 = {character}
 	ldr r6, [col], #4              @ 1* r6 = {character attribute}
 	ldrb r5, [fnt, r5, LSL #3]     @ 1* r5 = {character pixels}
 	lsr r4, r5, #2                 @ 1  r4 = {character pixels} >> 2
@@ -52,7 +52,7 @@ vgaDraw:
 		@ next 4 pixels, each pixel one byte  (r8)
 
 		nop                        @ 1
-		ldrb r5, [chr], #1         @ 1* r5 = {character}
+		ldrh r5, [chr], #2         @ 1* r5 = {character}
 		strb r8, [odr]             @ 2
 
 		ror r8, #8                 @ 1
