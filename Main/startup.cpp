@@ -4,7 +4,7 @@
 #include "startup.h"
 #include "Display/vgaCore.h"
 #include "Display/timing.h"
-#include "Display/font8x8.h"
+#include "Display/font8x16.h"
 #include "Display/vgaText.h"
 #include "Keyboard/ps2Keyboard.h"
 
@@ -26,7 +26,7 @@ extern "C" void initialize()
 extern "C" void setup()
 {
 	InitVga(&Video);
-	InitVgaText(font8x8);
+	InitVgaText(font8x16);
 
     // Display frame
     PrintChar(0, 0, '\xC9'); // ╔

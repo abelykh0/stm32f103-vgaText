@@ -5,7 +5,6 @@
 #include "timing.h"
 #include "vgadraw.h"
 #include "vgaText.h"
-#include "font8x8.h"
 
 namespace Vga
 {
@@ -22,10 +21,9 @@ static TIM_HandleTypeDef htim2;
 static TIM_HandleTypeDef htim3;
 static TIM_HandleTypeDef htim4;
 
-#define REPEAT_LINES 2
+#define REPEAT_LINES 1
 static volatile int vline = 0; /* The current line being drawn */
 static volatile int vflag = 0; /* When 1, can draw on the screen */
-static volatile int vdraw = 0; /* Used to increment vline every REPEAT_LINES drawn lines */
 static volatile int vblankline = 0; // used for workaround
 static uint8_t *GPIO_ODR;
 
@@ -74,7 +72,7 @@ void Vga::InitVga(VideoSettings* videoSettings)
 	}
 	uint16_t horizontalOffset = (timing->horizPixels - usedHorizontalPixels) / 2;
 
-	uint16_t usedVerticalPixels = VSIZE_CHARS * 8 * REPEAT_LINES;
+	uint16_t usedVerticalPixels = VSIZE_CHARS * 16 * REPEAT_LINES;
 	if (usedVerticalPixels > timing->verticalPixels)
 	{
 		usedVerticalPixels = timing->verticalPixels;
@@ -94,7 +92,6 @@ void Vga::InitVga(VideoSettings* videoSettings)
         timing->verticalStartLine);
 
     vline = 0;
-    vdraw = 0;
 }
 
 void Vga::ClearScreen()
@@ -147,21 +144,16 @@ __irq void TIM3_IRQHandler()
 		else if (vflag)
 		{
 			int offset = (vline >> 3) * HSIZE_CHARS;
-			vgaDraw((uint8_t*)Vga::font + (vline & 0x07),
+			vgaDraw((uint8_t*)Vga::font + (vline & 0x0F),
 				&Vga::ScreenCharacters[offset],
 				&Vga::ScreenAttributes[offset],
 				GPIO_ODR);
 
-			vdraw++;
-			if (vdraw == 2)
+			vline++;
+			if (vline == verticalPixelCount)
 			{
-				vdraw = 0;
-				vline++;
-				if (vline == verticalPixelCount)
-				{
-					vdraw = vline = vflag = 0;
-					vblankline = verticalOffset;
-				}
+				vline = vflag = 0;
+				vblankline = verticalOffset;
 			}
 		}
     }
