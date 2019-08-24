@@ -43,15 +43,15 @@ How to connect wires:
 ## Overview
 The STM32F103 is a Cortex-M3 microcontroller that has neither a video controller, nor enough RAM for a framebuffer at any reasonable resolution.
 
-This demo works around this to produce a reasonable quality 800x600 video with 64 colors to display 36x37 (1,332) 8x8 pixel characters. It uses three timers and a GPIO port. In addition to VGA output, the demo also gets input from a PS/2 keyboard.
-The release build is using less than half of the 20K available RAM.
+This demo works around this to produce an acceptable quality 800x600 video with 64 colors to display 36x37 (1,332) 8x16 pixel characters. It uses three timers and a GPIO port. In addition to VGA output, the demo also gets input from a PS/2 keyboard.
+The release build is using about half of the 20K available RAM.
 
 ## Implementation Details
 * Timer TIM4 is used to generate vertical sync signal
 * Timer TIM2 is used as a "shock absorber" to make the VGA stable
 * Timer TIM3 is used to generate horizontal sync signal
 * The code that reads the PS/2 keyboard input is running inside SyncSV interrupt
-* Video memory contains 1 byte characters and 4 byte "attributes". The attribute is an address to a 128 byte lookup table containing (4 * 16) normal colors and (4 * 16) inverted colors (to show cursor)
+* Video memory contains 2 byte characters (unfortunately, if using 1 byte, only 127 characters can be supported because of limitation of the "drawing" assembly function) and 4 byte "attributes". The attribute is an address to a 128 byte lookup table containing (4 * 16) normal colors and (4 * 16) inverted colors (to show cursor)
 * File settings.h contains definitions for default colors (background and font), timing for VGA mode (set to 800x600 @ 56 Hz), as well as number of character columns and rows
 
 
