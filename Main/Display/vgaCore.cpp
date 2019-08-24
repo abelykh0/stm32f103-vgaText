@@ -222,9 +222,8 @@ static void InitVSync(
     sConfigOC.Pulse = syncPulse;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+    sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
     HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
-    __HAL_TIM_ENABLE_IT(&htim4, TIM_IT_CC1);
     TIM_CCxChannelCmd(htim4.Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
 
     sConfigOC.OCMode = TIM_OCMODE_INACTIVE;
@@ -311,9 +310,8 @@ static void InitHSync(
     sConfigOC.Pulse = syncPulse;
     sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
-    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+    sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
     HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
-    __HAL_TIM_ENABLE_IT(&htim3, TIM_IT_CC3);
     TIM_CCxChannelCmd(htim3.Instance, TIM_CHANNEL_3, TIM_CCx_ENABLE);
 
     sConfigOC.OCMode = TIM_OCMODE_INACTIVE;
