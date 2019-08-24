@@ -2,8 +2,6 @@
 
 .syntax unified
 
-@ 640x480@24 > 40x30?
-
 @ Arguments:
 @  r0  uint8_t*  font
 @  r1  uint8_t*  characters
