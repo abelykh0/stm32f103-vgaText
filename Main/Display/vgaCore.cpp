@@ -230,7 +230,6 @@ static void InitVSync(
     sConfigOC.Pulse = startDraw;
     HAL_TIM_OC_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4);
     __HAL_TIM_ENABLE_IT(&htim4, TIM_IT_CC4);
-    TIM_CCxChannelCmd(htim4.Instance, TIM_CHANNEL_4, TIM_CCx_ENABLE);
 
     if (IS_TIM_BREAK_INSTANCE(htim4.Instance) != RESET)
     {
@@ -271,7 +270,6 @@ static void InitHSync(
     sConfigOC.Pulse = startDraw - 12 - 1;
     HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2);
     __HAL_TIM_ENABLE_IT(&htim2, TIM_IT_CC2);
-    TIM_CCxChannelCmd(htim2.Instance, TIM_CHANNEL_2, TIM_CCx_ENABLE);
 
     if (IS_TIM_BREAK_INSTANCE(htim2.Instance) != RESET)
     {
@@ -318,7 +316,6 @@ static void InitHSync(
     sConfigOC.Pulse = startDraw - 1;
     HAL_TIM_OC_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2);
     __HAL_TIM_ENABLE_IT(&htim3, TIM_IT_CC2);
-    TIM_CCxChannelCmd(htim3.Instance, TIM_CHANNEL_2, TIM_CCx_ENABLE);
 
     if (IS_TIM_BREAK_INSTANCE(htim3.Instance) != RESET)
     {
