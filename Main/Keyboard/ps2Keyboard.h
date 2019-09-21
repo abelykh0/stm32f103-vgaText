@@ -1,8 +1,17 @@
 #ifndef _PS2KEYBOARD_H_
 #define _PS2KEYBOARD_H_
 
+#include "settings.h"
+
+#ifdef BOARD2
+#define CLK_PIN  GPIO_PIN_0
+#define DATA_PIN GPIO_PIN_1
+#define KBD_GPIO GPIOA
+#else
 #define CLK_PIN  GPIO_PIN_10
 #define DATA_PIN GPIO_PIN_11
+#define KBD_GPIO GPIOB
+#endif
 
 /* Single Byte Key Codes */
 #define KEY_NUM      0x77

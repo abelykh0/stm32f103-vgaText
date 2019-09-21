@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 #include <stdint.h>
 
 #include "startup.h"

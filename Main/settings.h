@@ -1,6 +1,8 @@
 #ifndef __VIDEOSETTINGS_H__
 #define __VIDEOSETTINGS_H__
 
+#define BOARD2
+
 // Colors
 #define BACK_COLOR 0x10
 #define FORE_COLOR 0x3F

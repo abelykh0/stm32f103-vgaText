@@ -31,7 +31,11 @@ static volatile uint8_t _parity;
 
 void Ps2_Initialize()
 {
-    __HAL_RCC_GPIOB_CLK_ENABLE();
+#ifdef BOARD2
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+#else
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+#endif
 
     GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -39,13 +43,13 @@ void Ps2_Initialize()
     GPIO_InitStruct.Pin = CLK_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(KBD_GPIO, &GPIO_InitStruct);
 
     // DATA pin
     GPIO_InitStruct.Pin = DATA_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(KBD_GPIO, &GPIO_InitStruct);
 
     ps2_status = IDLE;
     QueueInit();

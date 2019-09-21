@@ -46,23 +46,35 @@ void Vga::InitVga(VideoSettings* videoSettings)
 
     GPIO_InitTypeDef gpioInit;
 
-    // Set PA0..PA5 to OUTPUT with high speed
     __HAL_RCC_GPIOA_CLK_ENABLE();
-    gpioInit.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
-    gpioInit.Mode = GPIO_MODE_OUTPUT_PP;
-    gpioInit.Pull = GPIO_PULLUP;
-    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOA, &gpioInit);
+    __HAL_RCC_GPIOB_CLK_ENABLE();
 
     // HSync on PB0 and VSync on PB6
-    __HAL_RCC_GPIOB_CLK_ENABLE();
     gpioInit.Pin = GPIO_PIN_0 | GPIO_PIN_6;
     gpioInit.Mode = GPIO_MODE_AF_PP;
     gpioInit.Pull = GPIO_PULLUP;
     gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(GPIOB, &gpioInit);
 
+#ifdef BOARD2
+    // Set PB8..PB9, PB12..PB15 to OUTPUT with high speed
+    gpioInit.Pin = GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+    gpioInit.Mode = GPIO_MODE_OUTPUT_PP;
+    gpioInit.Pull = GPIO_PULLUP;
+    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOB, &gpioInit);
+
+    GPIO_ODR = (uint8_t*)&GPIOA->ODR + 1;
+#else
+    // Set PA0..PA5 to OUTPUT with high speed
+    gpioInit.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
+    gpioInit.Mode = GPIO_MODE_OUTPUT_PP;
+    gpioInit.Pull = GPIO_PULLUP;
+    gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOA, &gpioInit);
+
     GPIO_ODR = (uint8_t*)&GPIOA->ODR;
+#endif
 
 	double realPixelsPerPixel = timing->pixel_frequency_mhz / 18;
 	uint16_t usedHorizontalPixels = HSIZE_CHARS * 8 * realPixelsPerPixel;
@@ -210,7 +222,7 @@ static void InitVSync(
     sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
     sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
     sSlaveConfig.TriggerFilter = 0;
-    HAL_TIM_SlaveConfigSynchronization(&htim4, &sSlaveConfig);
+    HAL_TIM_SlaveConfigSynchro(&htim4, &sSlaveConfig);
 
     HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
@@ -298,7 +310,7 @@ static void InitHSync(
     sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
     sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
     sSlaveConfig.TriggerFilter = 0;
-    HAL_TIM_SlaveConfigSynchronization(&htim3, &sSlaveConfig);
+    HAL_TIM_SlaveConfigSynchro(&htim3, &sSlaveConfig);
 
     HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM3_IRQn);
