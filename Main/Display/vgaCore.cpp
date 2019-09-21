@@ -64,7 +64,7 @@ void Vga::InitVga(VideoSettings* videoSettings)
     gpioInit.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(GPIOB, &gpioInit);
 
-    GPIO_ODR = (uint8_t*)&GPIOA->ODR + 1;
+    GPIO_ODR = (uint8_t*)&GPIOB->ODR + 1;
 #else
     // Set PA0..PA5 to OUTPUT with high speed
     gpioInit.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
