@@ -50,7 +50,7 @@ extern "C" void setup()
     {
     	for (uint8_t j = 0; j < 4; j++)
     	{
-            _allColorsAttribute[(color << 2) + j] = color;
+            _allColorsAttribute[(color << 2) + j] = GET_COLOR(color);
     	}
     }
 

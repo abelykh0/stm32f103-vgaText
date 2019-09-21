@@ -3,9 +3,16 @@
 
 #define BOARD2
 
+#ifdef BOARD2
+#define GET_COLOR(x) ((x & 0x03) | ((x << 2) & 0xF0))
+#else
+#define GET_COLOR(x) (x)
+#endif
+
+
 // Colors
-#define BACK_COLOR 0x10
-#define FORE_COLOR 0x3F
+#define BACK_COLOR GET_COLOR(0x10)
+#define FORE_COLOR GET_COLOR(0x3F)
 //#define BACK_COLOR 0x00
 //#define FORE_COLOR 0x0C
 
