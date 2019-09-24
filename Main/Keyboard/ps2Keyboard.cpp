@@ -373,14 +373,12 @@ inline void Update(uint8_t dataBit)
 extern "C" void HBlankInterrupt()
 {
     uint32_t gpioBits = KBD_GPIO->IDR;
-    uint16_t clkBit = (gpioBits & CLK_PIN);
-    uint8_t dataBit = (gpioBits & DATA_PIN) ? 1 : 0;
 
-    if (clkBit == 0)
+    if ((gpioBits & CLK_PIN) == 0)
     {
         // CLK = 0
 
-        lastData = dataBit;
+        lastData = (gpioBits & DATA_PIN) ? 1 : 0;
         lastClk = 0;
     }
     else
