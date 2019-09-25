@@ -24,7 +24,6 @@ static TIM_HandleTypeDef htim4;
 #define REPEAT_LINES 1
 static volatile int vline = 0; /* The current line being drawn */
 static volatile int vflag = 0; /* When 1, can draw on the screen */
-static volatile int vblankline = 0; // used for workaround
 static uint8_t *GPIO_ODR;
 
 static uint16_t verticalPixelCount;
@@ -147,15 +146,7 @@ __irq void TIM3_IRQHandler()
     {
         __HAL_TIM_CLEAR_IT(&htim3, TIM_FLAG_CC2);
 
-		// Workaround for first line not showing properly
-		if (vblankline > 0)
-		{
-			*GPIO_ODR = BACK_COLOR;
-			*GPIO_ODR = 0;
-
-			vblankline--;
-		}
-		else if (vflag)
+		if (vflag)
 		{
 			int offset = (vline >> 4) * HSIZE_CHARS;
 			vgaDraw((uint8_t*)Vga::font + (vline & 0x0F),
@@ -167,7 +158,6 @@ __irq void TIM3_IRQHandler()
 			if (vline == verticalPixelCount)
 			{
 				vline = vflag = 0;
-				vblankline = verticalOffset;
 			}
 		}
     }
@@ -191,7 +181,6 @@ __irq void TIM4_IRQHandler()
 
         vflag = 1;
         vline = 0;
-        vblankline = verticalOffset;
     }
     else
     {
@@ -279,7 +268,7 @@ static void InitHSync(
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
 
     sConfigOC.OCMode = TIM_OCMODE_INACTIVE;
-    sConfigOC.Pulse = startDraw - 12 - 1;
+    sConfigOC.Pulse = startDraw - 60 - 1;
     HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2);
     __HAL_TIM_ENABLE_IT(&htim2, TIM_IT_CC2);
 

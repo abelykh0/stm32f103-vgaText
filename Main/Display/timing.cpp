@@ -48,7 +48,7 @@ Timing const timing_800x600_56hz =
     .horizWholeLine = 1024,
     .horizSyncPulse = 72,
     .horizStartDraw = 72 - 24,
-	.horizLead = -90,
+	.horizLead = -120,
 
 	.verticalPixels = 600,
     .verticalSyncPolarity = Timing::Polarity::positive,
