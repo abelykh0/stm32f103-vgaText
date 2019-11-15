@@ -11,7 +11,7 @@ VGA text demo on STM32F103 "bluepill"
 
 | Hardware      |    Qty|
 | ------------- | -----:|
-| [STM32F103 "Blue Pill"](https://wiki.stm32duino.com/index.php?title=Blue_Pill) board | 1
+| [STM32F103 "Blue Pill"](https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill) board | 1
 | VGA connector | 1
 | PS/2 Keyboard | 1
 | Resistors 470 Ohm | 3
