@@ -50,7 +50,7 @@ The release build is using about half of the 20K available RAM.
 * Timer TIM4 is used to generate vertical sync signal
 * Timer TIM2 is used as a "shock absorber" to make the VGA stable
 * Timer TIM3 is used to generate horizontal sync signal
-* The code that reads the PS/2 keyboard input is running inside SyncSV interrupt
+* The code that reads the PS/2 keyboard input is running inside PendSV interrupt
 * Video memory contains 2 byte characters (unfortunately, if using 1 byte, only 127 characters can be supported because of limitation of the "drawing" assembly function) and 4 byte "attributes". The attribute is an address to a 128 byte lookup table containing (4 * 16) normal colors and (4 * 16) inverted colors (to show cursor)
 * File settings.h contains definitions for default colors (background and font), timing for VGA mode (set to 800x600 @ 56 Hz), as well as number of character columns and rows
 
