@@ -1,7 +1,7 @@
 #ifndef __VIDEOSETTINGS_H__
 #define __VIDEOSETTINGS_H__
 
-#define BOARD2
+//#define BOARD2
 
 #ifdef BOARD2
 #define GET_COLOR(x) ((x & 0x03) | ((x << 2) & 0xF0))
