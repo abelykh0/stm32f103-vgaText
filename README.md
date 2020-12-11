@@ -1,6 +1,8 @@
 ## stm32f103-vgaText
 VGA text demo on STM32F103 "bluepill"
 
+![Board](https://raw.githubusercontent.com/abelykh0/stm32f103-vgaText/master/doc/Board.jpg)
+
 ## What it can do
 * Display 38x37 characters
 * Use PS/2 keyboard to type and move cursor
