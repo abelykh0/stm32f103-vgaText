@@ -24,7 +24,7 @@ VGA text demo on STM32F103 "bluepill"
 | Jumper wires | 20
 | ST-Link v2 or clone | 1
 
-Software: Install free IDE [System Workbench for STM32](https://www.st.com/en/development-tools/sw4stm32.html/). I am using Windows 10, however STMicroelectronics claims that it also supports Linux and Mac.
+Software: Install free IDE [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html). I am using Windows 10, however STMicroelectronics claims that it also supports Linux and Mac.
 
 How to connect wires:
 
@@ -55,6 +55,3 @@ The release build is using about half of the 20K available RAM.
 * The code that reads the PS/2 keyboard input is running inside PendSV interrupt
 * Video memory contains 2 byte characters (unfortunately, if using 1 byte, only 127 characters can be supported because of limitation of the "drawing" assembly function) and 4 byte "attributes". The attribute is an address to a 128 byte lookup table containing (4 * 16) normal colors and (4 * 16) inverted colors (to show cursor)
 * File settings.h contains definitions for default colors (background and font), timing for VGA mode (set to 800x600 @ 56 Hz), as well as number of character columns and rows
-
-
-
